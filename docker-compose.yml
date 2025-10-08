@@ -1,0 +1,26 @@
+# Versão do Docker Compose
+version: "3.8"
+
+# Definição dos nossos serviços (containers)
+services:
+  # Nome do serviço do banco de dados
+  postgres_db:
+    # Imagem que será usada para criar o container
+    image: postgres:14-alpine
+    # Nome que daremos ao container quando ele estiver rodando
+    container_name: weplan_postgres
+    # Reiniciar o container automaticamente caso ele pare
+    restart: always
+    # Variáveis de ambiente para configurar o PostgreSQL
+    environment:
+      POSTGRES_USER: docker # Usuário do banco
+      POSTGRES_PASSWORD: docker # Senha do banco
+      POSTGRES_DB: weplan_db # Nome do banco de dados que será criado
+    # Mapeamento de portas: A porta 5432 do container será acessível
+    # pela porta 5432 da sua máquina (host)
+    ports:
+      - "5432:5432"
+    # Volumes para persistir os dados: Os dados do banco serão salvos
+    # na pasta 'data', para não se perderem quando o container for desligado.
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
