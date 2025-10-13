@@ -7,7 +7,9 @@ import {
 import {
   createUserController,
   authenticateUserController,
+  getUserProfileController,
 } from "../controllers/usersController";
+import { authMiddleware } from "../middlewares/authMiddleware";
 
 const userRoutes = Router();
 
@@ -21,5 +23,6 @@ userRoutes.post(
   validateRequest(authenticateUserSchema),
   authenticateUserController
 );
+userRoutes.get("/me", authMiddleware, getUserProfileController);
 
 export { userRoutes };

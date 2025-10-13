@@ -34,7 +34,7 @@ export class AuthenticateUserService {
     // Gerar o token JWT
     const token = sign(
       {}, // Payload (podemos adicionar dados como roles aqui no futuro)
-      process.env.JWT_SECRET as string, 
+      process.env.JWT_SECRET as string,
       {
         subject: user.id,
         expiresIn: "1d", // Duração do token (expira em 1 dia)

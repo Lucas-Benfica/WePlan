@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { UserRepository } from "../repositories/userRepository";
 import { CreateUserService } from "../services/users/createUserService";
 import { AuthenticateUserService } from "../services/users/authenticateUserService";
+import { GetUserProfileService } from "../services/users/getUserProfileService";
 
 export async function createUserController(req: Request, res: Response) {
   const { name, email, password } = req.body;
@@ -23,4 +24,15 @@ export async function authenticateUserController(req: Request, res: Response) {
   const { token } = await authenticateUserService.execute({ email, password });
 
   return res.status(200).json({ token });
+}
+
+export async function getUserProfileController(req: Request, res: Response) {
+  const userId = req.user.id;
+
+  const userRepository = new UserRepository();
+  const getUserProfileService = new GetUserProfileService(userRepository);
+
+  const { user } = await getUserProfileService.execute({ userId });
+
+  return res.status(200).json(user);
 }
