@@ -23,3 +23,5 @@ pnpm-debug.log*
 
 # Docker data volumes
 /data
+
+README_COMMANDS.md
