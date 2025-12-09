@@ -8,7 +8,6 @@ import {
 import type { User } from "../types/User";
 import { authService } from "../services/authService";
 import { api } from "../services/api";
-import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   user: User | null;
@@ -23,7 +22,6 @@ export const AuthContext = createContext({} as AuthContextType);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
 
   const loadStoredData = useCallback(async () => {
     const storedToken = localStorage.getItem("weplan.token");
@@ -60,7 +58,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = () => {
     localStorage.removeItem("weplan.token");
     setUser(null);
-    navigate("/login");
   };
 
   return (
