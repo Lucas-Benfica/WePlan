@@ -3,6 +3,7 @@ import { DefaultLayout } from "../layouts/DefaultLayout";
 import { SignIn } from "../pages/SignIn";
 import { Dashboard } from "../pages/Dashboard";
 import { SignUp } from "../pages/SignUp";
+import { PrivateRoute } from "./privateRoute";
 
 export const router = createBrowserRouter([
   // Rotas Públicas
@@ -21,14 +22,18 @@ export const router = createBrowserRouter([
 
   // Rotas Privadas
   {
-    path: "/",
-    element: <DefaultLayout />,
+    element: <PrivateRoute />,
     children: [
       {
-        path: "/dashboard",
-        element: <Dashboard />,
+        path: "/",
+        element: <DefaultLayout />,
+        children: [
+          {
+            path: "/dashboard",
+            element: <Dashboard />,
+          },
+        ],
       },
-      // Add '/families', '/transactions'
     ],
   },
 ]);

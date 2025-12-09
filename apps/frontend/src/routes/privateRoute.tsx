@@ -10,12 +10,15 @@ export function PrivateRoute() {
       <div
         style={{
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           height: "100vh",
+          gap: "1rem",
         }}
       >
-        <Spin size="large" tip="Carregando..." />
+        <Spin size="large" />
+        <span>Carregando...</span>
       </div>
     );
   }
