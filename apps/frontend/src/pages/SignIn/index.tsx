@@ -12,6 +12,7 @@ import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { authService } from "../../services/authService";
 import { useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
 
 const { Title, Text } = Typography;
 
@@ -26,11 +27,12 @@ export function SignIn() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const { signIn } = useAuth();
+
   const onFinish = async (values: SignInFormValues) => {
     setLoading(true);
     try {
-      const response = await authService.login(values);
-      localStorage.setItem("weplan.token", response.token);
+      await signIn(values);
       messageApi.success("Login realizado com sucesso!");
       setTimeout(() => {
         navigate("/dashboard");

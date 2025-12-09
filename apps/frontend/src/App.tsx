@@ -6,6 +6,7 @@ import { router } from "./routes";
 
 import GlobalStyle from "./styles/GlobalStyles";
 import ResetStyle from "./styles/ResetStyles";
+import { AuthProvider } from "./contexts/AuthContext";
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -24,7 +25,9 @@ function App() {
       <ResetStyle />
       <GlobalStyle />
 
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </ConfigProvider>
   );
 }
