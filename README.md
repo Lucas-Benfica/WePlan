@@ -76,11 +76,11 @@ O frontend estará rodando em http://localhost:5173 e o backend em http://localh
 
 📂 Estrutura do Projeto
 
-/
-├── apps/
-│ ├── backend/ # API Node.js/Express
-│ └── frontend/ # Aplicação React
-├── packages/ # Pacotes compartilhados (configurações, tipos)
-└── docker-compose.yml
+/<br>
+├── apps/<br>
+│ ├── backend/ # API Node.js/Express<br>
+│ └── frontend/ # Aplicação React<br>
+├── packages/ # Pacotes compartilhados (configurações, tipos)<br>
+└── docker-compose.yml<br>
 
 Feito por Lucas Soares Benfica.
