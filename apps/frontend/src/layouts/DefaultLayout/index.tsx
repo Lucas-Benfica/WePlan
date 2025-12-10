@@ -152,7 +152,7 @@ export function DefaultLayout() {
               {
                 key: "3",
                 icon: <TeamOutlined />,
-                label: "Minha Família",
+                label: "Minhas Famílias",
               },
             ]}
           />
