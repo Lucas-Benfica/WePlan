@@ -12,6 +12,7 @@ import {
   Switch,
   Tooltip,
   Grid,
+  message,
 } from "antd";
 import {
   DashboardOutlined,
@@ -27,8 +28,11 @@ import {
   ArrowUpOutlined,
   ArrowDownOutlined,
   CloseOutlined,
+  DownOutlined,
+  HomeOutlined,
 } from "@ant-design/icons";
 import { useAuth } from "../../hooks/useAuth";
+import { useFamily } from "../../hooks/useFamily";
 
 const { Header, Sider, Content } = Layout;
 const { Text } = Typography;
@@ -39,13 +43,18 @@ export function DefaultLayout() {
   const location = useLocation();
 
   const screens = useBreakpoint();
-  const isMobile = screens.lg === false;
+  const isMobile = !screens.lg;
 
   const [collapsed, setCollapsed] = useState(false);
   const { signOut, user } = useAuth();
+
+  const { families, activeFamily, selectFamily } = useFamily();
+
   const {
     token: { colorBgContainer, colorPrimary },
   } = theme.useToken();
+
+  const [messageApi, contextHolder] = message.useMessage();
 
   const addMenuItems = [
     {
@@ -62,8 +71,20 @@ export function DefaultLayout() {
     },
   ];
 
+  const familyMenuItems = families.map((family) => ({
+    key: family.id,
+    label: family.name,
+    icon: <HomeOutlined />,
+    onClick: () => {
+      selectFamily(family.id);
+      messageApi.success(`Família ${family.name} selecionada`);
+    },
+  }));
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
+      {contextHolder}
+
       <Sider
         trigger={null}
         collapsible
@@ -303,8 +324,39 @@ export function DefaultLayout() {
             }}
           />
 
+          {/* CENTRO: Seletor de Família */}
+          <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+            {families.length > 0 ? (
+              <Dropdown menu={{ items: familyMenuItems }} trigger={["click"]}>
+                <Button type="text" style={{ height: 50, padding: "4px 16px" }}>
+                  <Flex vertical align="start" gap={0}>
+                    <Text
+                      type="secondary"
+                      style={{ fontSize: 10, lineHeight: 1 }}
+                    >
+                      Família Ativa
+                    </Text>
+                    <Flex align="center" gap="small">
+                      <Text strong style={{ fontSize: 14, lineHeight: 1.2 }}>
+                        {activeFamily?.name || "Selecione..."}
+                      </Text>
+                      <DownOutlined
+                        style={{ fontSize: 10, color: "#bfbfbf" }}
+                      />
+                    </Flex>
+                  </Flex>
+                </Button>
+              </Dropdown>
+            ) : (
+              // Se não tiver família, mostra algo discreto ou nada
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                Nenhuma família selecionada
+              </Text>
+            )}
+          </div>
+
+          {/* Botão ADICIONAR */}
           <Flex align="center" gap="large">
-            {/* Botão ADICIONAR */}
             <Dropdown
               menu={{ items: addMenuItems }}
               placement="bottomRight"

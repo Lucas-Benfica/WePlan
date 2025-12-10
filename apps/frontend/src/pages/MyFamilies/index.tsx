@@ -105,7 +105,7 @@ export function MyFamilies() {
       icon: <ExclamationCircleOutlined />,
       content: `Tem certeza que deseja remover ${memberName} desta família?`,
       okText: "Sim, remover",
-      okType: "danger",
+      okType: "danger", 
       cancelText: "Cancelar",
       centered: isMobile,
       onOk: async () => {
