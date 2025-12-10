@@ -40,8 +40,10 @@ export async function joinFamilyController(req: Request, res: Response) {
 }
 
 export async function removeMemberController(req: Request, res: Response) {
-  const { familyId, memberId } = req.body;
+  const { familyId, memberId } = req.params;
   const adminUserId = req.user.id;
+
+  console.log("HERE1: ", req);
 
   const familyRepository = new FamilyRepository();
   const removeMemberService = new RemoveMemberService(familyRepository);

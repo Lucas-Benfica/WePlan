@@ -16,6 +16,7 @@ export class RemoveMemberService {
     familyId,
     memberIdToRemove,
   }: RemoveMemberRequest) {
+    console.log("HERE: ", adminUserId, familyId, memberIdToRemove);
     const adminMember = await this.familyRepository.isMember(
       familyId,
       adminUserId

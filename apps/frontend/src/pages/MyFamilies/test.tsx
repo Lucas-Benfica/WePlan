@@ -15,7 +15,6 @@ import {
   Tooltip,
   message,
   Flex,
-  Grid,
 } from "antd";
 import {
   PlusOutlined,
@@ -31,7 +30,6 @@ import { useAuth } from "../../hooks/useAuth";
 
 const { Title, Text, Paragraph } = Typography;
 const { Panel } = Collapse;
-const { useBreakpoint } = Grid;
 
 export function MyFamilies() {
   const {
@@ -44,15 +42,11 @@ export function MyFamilies() {
   } = useFamily();
   const { user } = useAuth();
 
-  const screens = useBreakpoint();
-  const isMobile = !screens.md;
-
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
   const [loadingAction, setLoadingAction] = useState(false);
 
   const [messageApi, contextHolder] = message.useMessage();
-  const [modal, modalContextHolder] = Modal.useModal();
 
   const [createForm] = Form.useForm();
   const [joinForm] = Form.useForm();
@@ -100,20 +94,19 @@ export function MyFamilies() {
     memberId: string,
     memberName: string
   ) => {
-    modal.confirm({
+    Modal.confirm({
       title: "Remover membro",
       icon: <ExclamationCircleOutlined />,
       content: `Tem certeza que deseja remover ${memberName} desta família?`,
       okText: "Sim, remover",
       okType: "danger",
       cancelText: "Cancelar",
-      centered: isMobile,
       onOk: async () => {
         try {
           await removeMember(familyId, memberId);
-          messageApi.success("Membro removido com sucesso.");
+          message.success("Membro removido com sucesso.");
         } catch (error) {
-          messageApi.error("Erro ao remover membro.");
+          message.error("Erro ao remover membro.");
           console.error(error);
         }
       },
@@ -131,30 +124,21 @@ export function MyFamilies() {
   };
 
   return (
-    <div style={{ maxWidth: isMobile ? "100%" : "80%", margin: "0 auto" }}>
+    <div style={{ maxWidth: "100%", margin: "0 auto" }}>
       {contextHolder}
-      {modalContextHolder}
 
       {/* --- Cabeçalho --- */}
-      <Flex
-        justify="space-between"
-        align={isMobile ? "start" : "center"}
-        vertical={isMobile}
-        gap={isMobile ? "middle" : "small"}
-        style={{ marginBottom: 24 }}
-      >
+      <Flex justify="space-between" align="center" style={{ marginBottom: 24 }}>
         <div>
           <Title level={2} style={{ marginBottom: 0 }}>
             Minhas Famílias
           </Title>
           <Text type="secondary">Gerencie seus grupos financeiros</Text>
         </div>
-        <Flex gap="small" style={{ width: isMobile ? "100%" : "auto" }}>
+        <Flex gap="small">
           <Button
             icon={<UsergroupAddOutlined />}
             onClick={() => setIsJoinModalOpen(true)}
-            block={isMobile}
-            style={{ flex: 1 }}
           >
             Entrar em Família
           </Button>
@@ -162,8 +146,6 @@ export function MyFamilies() {
             type="primary"
             icon={<PlusOutlined />}
             onClick={() => setIsCreateModalOpen(true)}
-            block={isMobile}
-            style={{ flex: 1 }}
           >
             Criar Nova
           </Button>
@@ -223,12 +205,7 @@ export function MyFamilies() {
                 style={{ marginBottom: 16, background: "#f9f9f9" }}
               >
                 <Flex justify="space-between" align="center">
-                  <Text
-                    copyable={{ text: family.id }}
-                    code
-                    style={{ maxWidth: isMobile ? 180 : "auto" }}
-                    ellipsis={isMobile}
-                  >
+                  <Text copyable={{ text: family.id }} code>
                     {family.id}
                   </Text>
                   <Button
@@ -311,7 +288,6 @@ export function MyFamilies() {
         open={isCreateModalOpen}
         onCancel={closeCreateModal}
         footer={null}
-        centered={isMobile}
       >
         <Form form={createForm} layout="vertical" onFinish={handleCreateFamily}>
           <Form.Item
@@ -341,7 +317,6 @@ export function MyFamilies() {
         open={isJoinModalOpen}
         onCancel={closeJoinModal}
         footer={null}
-        centered={isMobile}
       >
         <Form form={joinForm} layout="vertical" onFinish={handleJoinFamily}>
           <Paragraph>
