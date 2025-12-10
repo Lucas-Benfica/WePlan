@@ -17,6 +17,7 @@ interface FamilyContextType {
   loadFamilies: () => Promise<void>;
   createFamily: (name: string) => Promise<void>;
   joinFamily: (familyId: string) => Promise<void>;
+  removeMember: (familyId: string, memberId: string) => Promise<void>;
 }
 
 export const FamilyContext = createContext({} as FamilyContextType);
@@ -84,6 +85,11 @@ export function FamilyProvider({ children }: { children: ReactNode }) {
     selectFamily(familyId);
   };
 
+  const removeMember = async (familyId: string, memberId: string) => {
+    await familyService.removeMember(familyId, memberId);
+    await loadFamilies();
+  };
+
   return (
     <FamilyContext.Provider
       value={{
@@ -94,6 +100,7 @@ export function FamilyProvider({ children }: { children: ReactNode }) {
         loadFamilies,
         createFamily,
         joinFamily,
+        removeMember,
       }}
     >
       {children}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   Layout,
   Menu,
@@ -35,6 +35,9 @@ const { Text } = Typography;
 const { useBreakpoint } = Grid;
 
 export function DefaultLayout() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const screens = useBreakpoint();
   const isMobile = screens.lg === false;
 
@@ -137,20 +140,23 @@ export function DefaultLayout() {
             defaultSelectedKeys={["1"]}
             style={{ borderRight: 0, flex: 1, padding: "0 8px" }}
             // Ao clicar em um item no mobile, fechamos o menu automaticamente
-            onClick={() => isMobile && setCollapsed(true)}
+            onClick={({ key }) => {
+              navigate(key);
+              if (isMobile) setCollapsed(true);
+            }}
             items={[
               {
-                key: "1",
+                key: "/dashboard",
                 icon: <DashboardOutlined />,
                 label: "Dashboard",
               },
               {
-                key: "2",
+                key: "/transactions",
                 icon: <WalletOutlined />,
                 label: "Transações",
               },
               {
-                key: "3",
+                key: "/families",
                 icon: <TeamOutlined />,
                 label: "Minhas Famílias",
               },

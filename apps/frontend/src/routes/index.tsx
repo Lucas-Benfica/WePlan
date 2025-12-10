@@ -4,6 +4,7 @@ import { SignIn } from "../pages/SignIn";
 import { Dashboard } from "../pages/Dashboard";
 import { SignUp } from "../pages/SignUp";
 import { PrivateRoute } from "./privateRoute";
+import { MyFamilies } from "../pages/MyFamilies";
 
 export const router = createBrowserRouter([
   // Rotas Públicas
@@ -31,6 +32,10 @@ export const router = createBrowserRouter([
           {
             path: "/dashboard",
             element: <Dashboard />,
+          },
+          {
+            path: "/families",
+            element: <MyFamilies />,
           },
         ],
       },
