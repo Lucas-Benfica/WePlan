@@ -7,6 +7,7 @@ import { router } from "./routes";
 import GlobalStyle from "./styles/GlobalStyles";
 import ResetStyle from "./styles/ResetStyles";
 import { AuthProvider } from "./contexts/AuthContext";
+import { FamilyProvider } from "./contexts/FamilyContext";
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -26,7 +27,9 @@ function App() {
       <GlobalStyle />
 
       <AuthProvider>
-        <RouterProvider router={router} />
+        <FamilyProvider>
+          <RouterProvider router={router} />
+        </FamilyProvider>
       </AuthProvider>
     </ConfigProvider>
   );
