@@ -42,7 +42,7 @@ model FamilyMember {
 
   user     User   @relation(fields: [userId], references: [id])
   userId   String
-  family   Family @relation(fields: [familyId], references: [id])
+  family   Family @relation(fields: [familyId], references: [id], onDelete: Cascade)
   familyId String
 
   @@unique([userId, familyId])
@@ -78,17 +78,22 @@ model CreditCard {
 }
 
 model Category {
-  id        String   @id @default(uuid())
-  name      String
-  type      String // "income" ou "expense"
+  id   String @id @default(uuid())
+  name String
+  type String // "income" ou "expense"
+
+  color String // "#FF0000" (Hex) ou "blue" (Tag do Antd)
+  icon  String // "home", "car", "shopping" (Identificador do ícone)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  family       Family        @relation(fields: [familyId], references: [id])
-  familyId     String
+  family   Family @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  familyId String
+
   transactions Transaction[]
 
-  @@unique([familyId, name])
+  @@unique([familyId, name, type])
 }
 
 model Transaction {

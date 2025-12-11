@@ -1,14 +1,18 @@
 import { prisma } from "../lib/prisma";
 import { Prisma, Family } from "@prisma/client";
+import { DEFAULT_CATEGORIES } from "../utils/defaultCategories";
 
 export class FamilyRepository {
   async createWithAdminMember(familyName: string, adminUserId: string) {
     const family = await prisma.$transaction(async (tx) => {
+      // 1. Criar a família
       const newFamily = await tx.family.create({
         data: {
           name: familyName,
         },
       });
+
+      // 2. Adicionar o criador como admin
       await tx.familyMember.create({
         data: {
           familyId: newFamily.id,
@@ -16,8 +20,18 @@ export class FamilyRepository {
           role: "admin",
         },
       });
+
+      // 3. Criar as Categorias Padrão
+      await tx.category.createMany({
+        data: DEFAULT_CATEGORIES.map((category) => ({
+          ...category,
+          familyId: newFamily.id,
+        })),
+      });
+
       return newFamily;
     });
+
     return family;
   }
 
