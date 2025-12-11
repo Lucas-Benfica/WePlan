@@ -3,11 +3,8 @@ import {
   Typography,
   Button,
   Card,
-  Row,
-  Col,
   Modal,
   Form,
-  Input,
   List,
   Avatar,
   Collapse,
@@ -28,20 +25,15 @@ import {
 } from "@ant-design/icons";
 import { useFamily } from "../../hooks/useFamily";
 import { useAuth } from "../../hooks/useAuth";
+import { JoinFamilyModal } from "../../components/modals/JoinFamilyModal";
+import { CreateFamilyModal } from "../../components/modals/CreateFamilyModal";
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Text } = Typography;
 const { Panel } = Collapse;
 const { useBreakpoint } = Grid;
 
 export function MyFamilies() {
-  const {
-    families,
-    activeFamily,
-    selectFamily,
-    createFamily,
-    joinFamily,
-    removeMember,
-  } = useFamily();
+  const { families, activeFamily, selectFamily, removeMember } = useFamily();
   const { user } = useAuth();
 
   const screens = useBreakpoint();
@@ -49,7 +41,6 @@ export function MyFamilies() {
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
-  const [loadingAction, setLoadingAction] = useState(false);
 
   const [messageApi, contextHolder] = message.useMessage();
   const [modal, modalContextHolder] = Modal.useModal();
@@ -67,34 +58,6 @@ export function MyFamilies() {
     joinForm.resetFields();
   };
 
-  const handleCreateFamily = async (values: { name: string }) => {
-    setLoadingAction(true);
-    try {
-      await createFamily(values.name);
-      messageApi.success("Família criada com sucesso!");
-      closeCreateModal();
-    } catch (error) {
-      messageApi.error("Erro ao criar família.");
-      console.error(error);
-    } finally {
-      setLoadingAction(false);
-    }
-  };
-
-  const handleJoinFamily = async (values: { familyId: string }) => {
-    setLoadingAction(true);
-    try {
-      await joinFamily(values.familyId);
-      messageApi.success("Você entrou na família com sucesso!");
-      closeJoinModal();
-    } catch (error) {
-      messageApi.error("Código inválido ou você já participa desta família.");
-      console.error(error);
-    } finally {
-      setLoadingAction(false);
-    }
-  };
-
   const handleRemoveMember = (
     familyId: string,
     memberId: string,
@@ -105,7 +68,7 @@ export function MyFamilies() {
       icon: <ExclamationCircleOutlined />,
       content: `Tem certeza que deseja remover ${memberName} desta família?`,
       okText: "Sim, remover",
-      okType: "danger", 
+      okType: "danger",
       cancelText: "Cancelar",
       centered: isMobile,
       onOk: async () => {
@@ -306,63 +269,18 @@ export function MyFamilies() {
       </Collapse>
 
       {/* --- Criar Família --- */}
-      <Modal
-        title="Criar Nova Família"
+      <CreateFamilyModal
         open={isCreateModalOpen}
         onCancel={closeCreateModal}
-        footer={null}
-        centered={isMobile}
-      >
-        <Form form={createForm} layout="vertical" onFinish={handleCreateFamily}>
-          <Form.Item
-            name="name"
-            label="Nome da Família"
-            rules={[
-              {
-                required: true,
-                message: "Dê um nome para sua família (ex: Casa, Viagem)",
-              },
-            ]}
-          >
-            <Input placeholder="Ex: Família Silva" />
-          </Form.Item>
-          <Flex justify="end" gap="small">
-            <Button onClick={closeCreateModal}>Cancelar</Button>
-            <Button type="primary" htmlType="submit" loading={loadingAction}>
-              Criar Família
-            </Button>
-          </Flex>
-        </Form>
-      </Modal>
+        isMobile={isMobile}
+      />
 
       {/* --- Entrar em Família --- */}
-      <Modal
-        title="Entrar em uma Família"
+      <JoinFamilyModal
         open={isJoinModalOpen}
         onCancel={closeJoinModal}
-        footer={null}
-        centered={isMobile}
-      >
-        <Form form={joinForm} layout="vertical" onFinish={handleJoinFamily}>
-          <Paragraph>
-            Peça ao administrador da família o{" "}
-            <strong>Código de Convite</strong> e cole abaixo.
-          </Paragraph>
-          <Form.Item
-            name="familyId"
-            label="Código de Convite (ID)"
-            rules={[{ required: true, message: "Insira o código da família" }]}
-          >
-            <Input placeholder="Ex: 550e8400-e29b..." />
-          </Form.Item>
-          <Flex justify="end" gap="small">
-            <Button onClick={closeJoinModal}>Cancelar</Button>
-            <Button type="primary" htmlType="submit" loading={loadingAction}>
-              Entrar
-            </Button>
-          </Flex>
-        </Form>
-      </Modal>
+        isMobile={isMobile}
+      />
     </div>
   );
 }

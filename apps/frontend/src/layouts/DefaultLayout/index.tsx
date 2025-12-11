@@ -348,15 +348,12 @@ export function DefaultLayout() {
                 </Button>
               </Dropdown>
             ) : (
-              // Se não tiver família, mostra algo discreto ou nada
-              <Text type="secondary" style={{ fontSize: 12 }}>
-                Nenhuma família selecionada
-              </Text>
+              <></>
             )}
           </div>
 
           {/* Botão ADICIONAR */}
-          <Flex align="center" gap="large">
+          <Flex align="center" gap="middle">
             <Dropdown
               menu={{ items: addMenuItems }}
               placement="bottomRight"

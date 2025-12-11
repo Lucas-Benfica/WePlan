@@ -19,7 +19,7 @@ function App() {
         algorithm: isDarkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: {
           fontFamily: "Inter, sans-serif",
-          colorPrimary: "#1890ff", //#1890ff
+          colorPrimary: "#1890ff", //#1890ff 009688
         },
       }}
     >
