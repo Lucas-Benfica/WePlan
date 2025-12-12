@@ -52,8 +52,10 @@ model BankAccount {
   id                String   @id @default(uuid())
   name              String
   bank              String // Ex: "Itaú", "Nubank"
+  bankLogo          String?
   initialBalance    Float
   hasCreditCard     Boolean  @default(false)
+  creditCardLimit   Float? // Limite do cartão de crédito
   invoiceClosingDay Int? // Dia do fechamento da fatura (1-28)
   invoiceDueDay     Int? // Dia do vencimento da fatura (1-28)
   createdAt         DateTime @default(now())
