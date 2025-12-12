@@ -5,6 +5,7 @@ import { Dashboard } from "../pages/Dashboard";
 import { SignUp } from "../pages/SignUp";
 import { PrivateRoute } from "./privateRoute";
 import { MyFamilies } from "../pages/MyFamilies";
+import { BankAccounts } from "../pages/BankAccounts";
 
 export const router = createBrowserRouter([
   // Rotas Públicas
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
           {
             path: "/families",
             element: <MyFamilies />,
+          },
+          {
+            path: "/bank-accounts",
+            element: <BankAccounts />,
           },
         ],
       },

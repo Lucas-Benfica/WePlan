@@ -8,6 +8,7 @@ import GlobalStyle from "./styles/GlobalStyles";
 import ResetStyle from "./styles/ResetStyles";
 import { AuthProvider } from "./contexts/AuthContext";
 import { FamilyProvider } from "./contexts/FamilyContext";
+import { BankAccountProvider } from "./contexts/BankAccountContext";
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -28,7 +29,9 @@ function App() {
 
       <AuthProvider>
         <FamilyProvider>
-          <RouterProvider router={router} />
+          <BankAccountProvider>
+            <RouterProvider router={router} />
+          </BankAccountProvider>
         </FamilyProvider>
       </AuthProvider>
     </ConfigProvider>

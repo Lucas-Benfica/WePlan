@@ -30,6 +30,7 @@ import {
   CloseOutlined,
   DownOutlined,
   HomeOutlined,
+  BankOutlined,
 } from "@ant-design/icons";
 import { useAuth } from "../../hooks/useAuth";
 import { useFamily } from "../../hooks/useFamily";
@@ -170,6 +171,11 @@ export function DefaultLayout() {
                 key: "/dashboard",
                 icon: <DashboardOutlined />,
                 label: "Dashboard",
+              },
+              {
+                key: "/bank-accounts",
+                icon: <BankOutlined />,
+                label: "Contas & Cartões",
               },
               {
                 key: "/transactions",
