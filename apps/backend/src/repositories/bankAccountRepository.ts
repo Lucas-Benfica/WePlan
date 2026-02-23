@@ -45,4 +45,55 @@ export class BankAccountRepository {
       where: { id },
     });
   }
+  async updateWithCards(
+    id: string,
+    data: Prisma.BankAccountUpdateInput,
+    cardsToCreate: { nickname: string }[],
+    cardsToUpdate: { id: string; nickname: string }[],
+    cardIdsToDelete: string[]
+  ) {
+    return prisma.$transaction(async (tx) => {
+      // 1. "Desvincular" transações dos cartões que serão excluídos
+      // Mantemos o bankAccountId, mas removemos o creditCardId
+      if (cardIdsToDelete.length > 0) {
+        await tx.transaction.updateMany({
+          where: {
+            creditCardId: { in: cardIdsToDelete },
+          },
+          data: {
+            creditCardId: null,
+          },
+        });
+
+        // 2. Deletar os cartões
+        await tx.creditCard.deleteMany({
+          where: {
+            id: { in: cardIdsToDelete },
+          },
+        });
+      }
+
+      // 3. Atualizar cartões existentes (um por um)
+      for (const card of cardsToUpdate) {
+        await tx.creditCard.update({
+          where: { id: card.id },
+          data: { nickname: card.nickname },
+        });
+      }
+
+      // 4. Criar novos cartões e atualizar a conta
+      return tx.bankAccount.update({
+        where: { id },
+        data: {
+          ...data,
+          creditCards: {
+            create: cardsToCreate, // Cria os novos
+          },
+        },
+        include: {
+          creditCards: true,
+        },
+      });
+    });
+  }
 }

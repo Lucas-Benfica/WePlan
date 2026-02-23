@@ -52,6 +52,15 @@ export const updateBankAccountSchema = z.object({
       creditCardLimit: z.number().optional(),
       invoiceClosingDay: z.number().min(1).max(31).optional(),
       invoiceDueDay: z.number().min(1).max(31).optional(),
+
+      creditCards: z
+        .array(
+          z.object({
+            id: z.string().optional(), // Se tiver ID, é update. Se não, é create.
+            nickname: z.string().min(1),
+          })
+        )
+        .optional(),
     })
     .refine(
       (data) => {

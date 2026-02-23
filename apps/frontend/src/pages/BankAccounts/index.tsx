@@ -122,8 +122,8 @@ export function BankAccounts() {
                   avatar={
                     <div
                       style={{
-                        width: 48,
-                        height: 48,
+                        width: 38,
+                        height: 38,
                         borderRadius: 12,
                         backgroundColor: bankColor,
                         display: "flex",
@@ -214,6 +214,7 @@ export function BankAccounts() {
                           <Flex
                             gap="small"
                             style={{ fontSize: 12, color: "#595959" }}
+                            vertical={isMobile}
                           >
                             <Tag icon={<CalendarOutlined />}>
                               Fecha dia {account.invoiceClosingDay}

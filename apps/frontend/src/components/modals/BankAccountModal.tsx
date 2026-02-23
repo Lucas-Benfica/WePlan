@@ -258,6 +258,10 @@ export function BankAccountModal({
                         align="baseline"
                         style={{ marginBottom: 8 }}
                       >
+                        {/* Isso garante que o ID seja enviado no update */}
+                        <Form.Item {...restField} name={[name, "id"]} hidden>
+                          <Input />
+                        </Form.Item>
                         <Form.Item
                           {...restField}
                           name={[name, "nickname"]}

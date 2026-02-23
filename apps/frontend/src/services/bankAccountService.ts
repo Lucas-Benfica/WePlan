@@ -26,6 +26,7 @@ interface UpdateBankAccountRequest {
   creditCardLimit?: number;
   invoiceClosingDay?: number;
   invoiceDueDay?: number;
+  creditCards?: { id?: string; nickname: string }[];
 }
 
 export const bankAccountService = {

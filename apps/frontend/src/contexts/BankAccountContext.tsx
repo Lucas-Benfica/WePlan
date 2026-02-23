@@ -31,6 +31,7 @@ export interface UpdateBankAccountData {
   creditCardLimit?: number;
   invoiceClosingDay?: number;
   invoiceDueDay?: number;
+  creditCards?: { id?: string; nickname: string }[];
 }
 
 interface BankAccountContextType {

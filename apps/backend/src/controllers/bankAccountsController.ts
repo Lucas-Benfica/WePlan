@@ -3,8 +3,8 @@ import { BankAccountRepository } from "../repositories/bankAccountRepository";
 import { CreateBankAccountService } from "../services/bankAccounts/createBankAccountService";
 import { ListFamilyBankAccountsService } from "../services/bankAccounts/listFamilyBankAccountsService";
 import { BadRequestError } from "../errors/BadRequestError";
-import { UpdateBankAccountService } from "../services/bankAccounts/UpdateBankAccountService";
 import { DeleteBankAccountService } from "../services/bankAccounts/deleteBankAccountService";
+import { UpdateBankAccountService } from "../services/bankAccounts/updateBankAccountService";
 
 export async function createBankAccountController(req: Request, res: Response) {
   const {
@@ -77,6 +77,7 @@ export async function updateBankAccountController(req: Request, res: Response) {
     creditCardLimit,
     invoiceClosingDay,
     invoiceDueDay,
+    creditCards,
   } = req.body;
 
   const bankAccountRepository = new BankAccountRepository();
@@ -92,6 +93,7 @@ export async function updateBankAccountController(req: Request, res: Response) {
     creditCardLimit,
     invoiceClosingDay,
     invoiceDueDay,
+    creditCards,
   });
 
   return res.status(200).json(bankAccount);
