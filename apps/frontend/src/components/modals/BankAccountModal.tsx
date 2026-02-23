@@ -2,10 +2,10 @@ import {
   Modal,
   Form,
   Input,
+  InputNumber,
   Button,
   Flex,
   Select,
-  InputNumber,
   Switch,
   Typography,
   Space,
@@ -13,6 +13,7 @@ import {
   message,
   Grid,
 } from "antd";
+import { CurrencyInput } from "../CurrencyInput";
 import {
   PlusOutlined,
   MinusCircleOutlined,
@@ -167,13 +168,7 @@ export function BankAccountModal({
             label="Saldo Atual"
             rules={[{ required: true, message: "Informe o saldo atual" }]}
           >
-            <InputNumber
-              style={{ width: "100%" }}
-              prefix="R$"
-              decimalSeparator=","
-              precision={2}
-              placeholder="0,00"
-            />
+            <CurrencyInput />
           </Form.Item>
 
           <Divider />
@@ -204,12 +199,7 @@ export function BankAccountModal({
                   rules={[{ required: true, message: "Obrigatório" }]}
                   style={{ flex: 1 }}
                 >
-                  <InputNumber
-                    style={{ width: "100%" }}
-                    prefix="R$"
-                    decimalSeparator=","
-                    precision={2}
-                  />
+                  <CurrencyInput />
                 </Form.Item>
 
                 <Form.Item

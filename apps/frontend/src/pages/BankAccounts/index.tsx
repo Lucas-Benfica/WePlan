@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Typography,
   Button,
@@ -22,14 +22,35 @@ import {
   DeleteOutlined,
   ExclamationCircleOutlined,
   CalendarOutlined,
+  ArrowUpOutlined,
+  ArrowDownOutlined,
 } from "@ant-design/icons";
 import { useBankAccount } from "../../hooks/useBankAccount";
+import { useTransaction } from "../../hooks/useTransaction";
 import { BankAccountModal } from "../../components/modals/BankAccountModal";
 import { BANKS_LIST, getBankColor } from "../../utils/banks";
 import type { BankAccount } from "../../types/BankAccount";
+import type { Transaction } from "../../types/Transaction";
 
 const { Title, Text } = Typography;
 const { useBreakpoint } = Grid;
+
+/** Calcula o saldo atual de uma conta: initialBalance + receitas pagas - despesas pagas */
+function computeCurrentBalance(
+  account: BankAccount,
+  transactions: Transaction[]
+): number {
+  const linked = transactions.filter(
+    (t) => t.bankAccountId === account.id && t.isPaid
+  );
+  const income = linked
+    .filter((t) => t.type === "income")
+    .reduce((s, t) => s + t.amount, 0);
+  const expense = linked
+    .filter((t) => t.type === "expense")
+    .reduce((s, t) => s + t.amount, 0);
+  return account.initialBalance + income - expense;
+}
 
 export function BankAccounts() {
   const screens = useBreakpoint();
@@ -37,13 +58,20 @@ export function BankAccounts() {
 
   const { bankAccounts, isLoadingAccounts, deleteBankAccount } =
     useBankAccount();
+  const { transactions } = useTransaction();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingAccount, setEditingAccount] = useState<BankAccount | null>(
-    null
-  );
-
+  const [editingAccount, setEditingAccount] = useState<BankAccount | null>(null);
   const [modal, modalContextHolder] = Modal.useModal();
+
+  // Map accountId -> currentBalance
+  const balanceMap = useMemo(() => {
+    const map: Record<string, number> = {};
+    for (const acc of bankAccounts) {
+      map[acc.id] = computeCurrentBalance(acc, transactions);
+    }
+    return map;
+  }, [bankAccounts, transactions]);
 
   const handleOpenCreate = () => {
     setEditingAccount(null);
@@ -76,6 +104,7 @@ export function BankAccounts() {
   return (
     <div style={{ maxWidth: 1000, margin: "0 auto" }}>
       {modalContextHolder}
+
       {/* Cabeçalho */}
       <Flex
         vertical={isMobile}
@@ -99,20 +128,22 @@ export function BankAccounts() {
         </Button>
       </Flex>
 
-      {/* Lista de Contas (Grid) */}
+      {/* Lista de Contas */}
       <Row gutter={[16, 16]}>
         {bankAccounts.map((account) => {
           const bankColor = getBankColor(account.bankLogo);
           const creditCardsCount = account.creditCards?.length || 0;
+          const currentBalance = balanceMap[account.id] ?? account.initialBalance;
+          const balanceDiff = currentBalance - account.initialBalance;
 
           return (
             <Col xs={24} sm={12} lg={12} key={account.id}>
               <Card
-                //hoverable
                 style={{ borderTop: `4px solid ${bankColor}` }}
                 actions={[
-                  <EditOutlined onClick={() => handleOpenEdit(account)} />,
+                  <EditOutlined key="edit" onClick={() => handleOpenEdit(account)} />,
                   <DeleteOutlined
+                    key="delete"
                     style={{ color: "#ff4d4f" }}
                     onClick={() => handleDelete(account)}
                   />,
@@ -139,7 +170,6 @@ export function BankAccounts() {
                   }
                   title={
                     <div style={{ display: "flex", flexDirection: "column" }}>
-                      {/* Nome da Conta */}
                       <Text
                         style={{
                           fontSize: 16,
@@ -150,7 +180,6 @@ export function BankAccounts() {
                       >
                         {account.name}
                       </Text>
-                      {/* Nome do Banco */}
                       <Text
                         type="secondary"
                         style={{ fontSize: 12, fontWeight: 400, marginTop: 2 }}
@@ -161,24 +190,42 @@ export function BankAccounts() {
                   }
                   description={
                     <Flex vertical gap="middle" style={{ marginTop: 20 }}>
-                      {/* Saldo */}
+                      {/* Saldo Atual (dinâmico) */}
                       <div>
-                        <Text type="secondary" style={{ fontSize: 12 }}>
-                          Saldo Disponível
-                        </Text>
+                        <Flex align="center" gap={6} style={{ marginBottom: 2 }}>
+                          <Text type="secondary" style={{ fontSize: 12 }}>
+                            Saldo Atual
+                          </Text>
+                          {balanceDiff !== 0 && (
+                            <Tooltip
+                              title={`Saldo inicial: ${account.initialBalance.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}`}
+                            >
+                              <Tag
+                                color={balanceDiff >= 0 ? "success" : "error"}
+                                style={{ fontSize: 10, padding: "0 4px", margin: 0 }}
+                              >
+                                {balanceDiff >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}{" "}
+                                {Math.abs(balanceDiff).toLocaleString("pt-BR", {
+                                  style: "currency",
+                                  currency: "BRL",
+                                })}
+                              </Tag>
+                            </Tooltip>
+                          )}
+                        </Flex>
                         <Statistic
-                          value={account.initialBalance}
+                          value={currentBalance}
                           precision={2}
                           prefix="R$"
                           valueStyle={{
                             fontSize: 20,
                             fontWeight: "bold",
-                            color: "#1f1f1f",
+                            color: currentBalance < 0 ? "#ff4d4f" : "#1f1f1f",
                           }}
                         />
                       </div>
 
-                      {/* Seção de Cartão de Crédito */}
+                      {/* Cartão de Crédito */}
                       {account.hasCreditCard && (
                         <div
                           style={{
@@ -187,11 +234,7 @@ export function BankAccounts() {
                             borderRadius: 8,
                           }}
                         >
-                          <Flex
-                            align="center"
-                            gap="small"
-                            style={{ marginBottom: 8 }}
-                          >
+                          <Flex align="center" gap="small" style={{ marginBottom: 8 }}>
                             <CreditCardOutlined style={{ color: bankColor }} />
                             <Text strong style={{ fontSize: 13 }}>
                               Cartão de Crédito
@@ -203,19 +246,14 @@ export function BankAccounts() {
                               Limite Total
                             </Text>
                             <Text strong>
-                              R${" "}
-                              {account.creditCardLimit?.toLocaleString(
-                                "pt-BR",
-                                { minimumFractionDigits: 2 }
-                              )}
+                              {account.creditCardLimit?.toLocaleString("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                              })}
                             </Text>
                           </Flex>
 
-                          <Flex
-                            gap="small"
-                            style={{ fontSize: 12, color: "#595959" }}
-                            vertical={isMobile}
-                          >
+                          <Flex gap="small" style={{ fontSize: 12 }} vertical={isMobile}>
                             <Tag icon={<CalendarOutlined />}>
                               Fecha dia {account.invoiceClosingDay}
                             </Tag>
@@ -229,9 +267,7 @@ export function BankAccounts() {
                               <Divider style={{ margin: "8px 0" }} />
                               <Text type="secondary" style={{ fontSize: 11 }}>
                                 {creditCardsCount}{" "}
-                                {creditCardsCount === 1
-                                  ? "cartão vinculado"
-                                  : "cartões vinculados"}
+                                {creditCardsCount === 1 ? "cartão vinculado" : "cartões vinculados"}
                               </Text>
                             </>
                           )}
@@ -260,11 +296,12 @@ export function BankAccounts() {
         )}
       </Row>
 
-      {/* Modal (Criação e Edição) */}
+      {/* Modal */}
       <BankAccountModal
         open={isModalOpen}
         onCancel={() => {
-          setIsModalOpen(false), setEditingAccount(null);
+          setIsModalOpen(false);
+          setEditingAccount(null);
         }}
         accountToEdit={editingAccount}
       />

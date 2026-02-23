@@ -6,6 +6,7 @@ import { SignUp } from "../pages/SignUp";
 import { PrivateRoute } from "./privateRoute";
 import { MyFamilies } from "../pages/MyFamilies";
 import { BankAccounts } from "../pages/BankAccounts";
+import { Transactions } from "../pages/Transactions";
 
 export const router = createBrowserRouter([
   // Rotas Públicas
@@ -42,8 +43,13 @@ export const router = createBrowserRouter([
             path: "/bank-accounts",
             element: <BankAccounts />,
           },
+          {
+            path: "/transactions",
+            element: <Transactions />,
+          },
         ],
       },
     ],
   },
 ]);
+
