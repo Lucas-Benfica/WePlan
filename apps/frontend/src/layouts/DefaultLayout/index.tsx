@@ -20,13 +20,13 @@ import {
   TeamOutlined,
   UserOutlined,
   LogoutOutlined,
-  PlusOutlined,
+  //PlusOutlined,
   GlobalOutlined,
   BulbOutlined,
   LeftOutlined,
   RightOutlined,
-  ArrowUpOutlined,
-  ArrowDownOutlined,
+  // ArrowUpOutlined,
+  // ArrowDownOutlined,
   CloseOutlined,
   DownOutlined,
   HomeOutlined,
@@ -56,20 +56,20 @@ export function DefaultLayout() {
 
   const [messageApi, contextHolder] = message.useMessage();
 
-  const addMenuItems = [
-    {
-      key: "income",
-      label: "Nova Receita",
-      icon: <ArrowUpOutlined style={{ color: "#3f8600" }} />,
-      onClick: () => console.log("Abrir modal de receita"),
-    },
-    {
-      key: "expense",
-      label: "Nova Despesa",
-      icon: <ArrowDownOutlined style={{ color: "#cf1322" }} />,
-      onClick: () => console.log("Abrir modal de despesa"),
-    },
-  ];
+  // const addMenuItems = [
+  //   {
+  //     key: "income",
+  //     label: "Nova Receita",
+  //     icon: <ArrowUpOutlined style={{ color: "#3f8600" }} />,
+  //     onClick: () => console.log("Abrir modal de receita"),
+  //   },
+  //   {
+  //     key: "expense",
+  //     label: "Nova Despesa",
+  //     icon: <ArrowDownOutlined style={{ color: "#cf1322" }} />,
+  //     onClick: () => console.log("Abrir modal de despesa"),
+  //   },
+  // ];
 
   const familyMenuItems = families.map((family) => ({
     key: family.id,
@@ -359,6 +359,7 @@ export function DefaultLayout() {
 
           {/* Botão ADICIONAR */}
           <Flex align="center" gap="middle">
+            {/* 
             <Dropdown
               menu={{ items: addMenuItems }}
               placement="bottomRight"
@@ -378,7 +379,7 @@ export function DefaultLayout() {
                   justifyContent: "center",
                 }}
               />
-            </Dropdown>
+            </Dropdown> */}
 
             <Flex align="center" gap="small" style={{ cursor: "pointer" }}>
               {/* Informações do Usuário (SÓ DESKTOP) */}
