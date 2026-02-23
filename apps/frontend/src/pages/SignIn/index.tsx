@@ -10,7 +10,6 @@ import {
 } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
-import { authService } from "../../services/authService";
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 

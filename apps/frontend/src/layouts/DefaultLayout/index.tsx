@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import {
   Layout,
   Menu,
@@ -41,7 +41,6 @@ const { useBreakpoint } = Grid;
 
 export function DefaultLayout() {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const screens = useBreakpoint();
   const isMobile = !screens.lg;

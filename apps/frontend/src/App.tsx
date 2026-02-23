@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { ConfigProvider, theme } from "antd";
 import ptBR from "antd/locale/pt_BR";
 import { RouterProvider } from "react-router-dom";
@@ -12,7 +11,7 @@ import { BankAccountProvider } from "./contexts/BankAccountContext";
 import { TransactionProvider } from "./contexts/TransactionContext";
 
 function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const isDarkMode = false;
 
   return (
     <ConfigProvider
